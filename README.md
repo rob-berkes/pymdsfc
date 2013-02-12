@@ -13,4 +13,4 @@ zOldName	zNewName
 
 zOldZ1		zNewZ1
 
- 
+These scripts require the pexpect Python module.   
