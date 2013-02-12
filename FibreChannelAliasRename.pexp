@@ -1,0 +1,31 @@
+import pxssh
+import getpass
+import time
+IFILE=open("aliases.10.rename","r")
+
+s=pxssh.pxssh()
+
+hostname="ipgoeshere"
+user="usernamegoeshere"
+password="password"
+what="fcalias"
+vsan="10" 
+zonename="zonesetname"
+# for vsan 10  zonename="zonesetname"   # for vsan 10
+
+s.login(hostname,user,password,auto_prompt_reset=False)
+s.prompt()
+s.sendline("conf t")
+
+for line in IFILE:
+	line=line.strip().split()
+	s.sendline(what +" rename "+str(line[0])+" "+str(line[1]).rstrip()+" vsan "+vsan)
+	print s.before
+
+s.sendline("zoneset distribute vsan "+vsan) 
+s.sendline("copy run start")
+s.prompt()
+s.sendline("zoneset activate name "+zonename+" vsan "+vsan)
+s.sendline("exit")
+IFILE.close()
+s.logout()
